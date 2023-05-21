@@ -6,21 +6,63 @@
 <script src="https://tonejs.github.io/build/Tone.js"></script>
 
 
-<!-- <div class="slidecontainer">
-    <input type="range" min="0.0001" max="" value="50" class="slider" id="myRange">
-</div> -->
+<input type="range" min="0.0001" max="0.01" value="50" class="slider" id="bouncy">
+<p>Value: <span id="sliderValue1"></span></p>
+
+<input type="range" min="0.0001" max="0.1" value="0.1" class="slider" id="speedy">
+<p>Value: <span id="sliderValue2"></span></p>
+
+<input type="number" id="radius" placeholder="Enter desired radius">
+<button onclick="showInputValue()">Submit</button>
+
+
+<style>
+
+.slider {
+  appearance: none;
+  width: 30%;
+  height: 10px;
+  border-radius: 5px;
+  background: #ccc;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #4CAF50;
+  cursor: pointer;
+}
+
+input[type="number"] {
+  width: 200px;
+  padding: 10px;
+  font-size: 16px;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+}
+
+
+</style>
 
 
 <script>
 
 balls = []
-// balls2 = []
-// balls3 = []
-
 synths = []
 
 cols = 21
 diam = 20
+
+draw_diam = 10
 // make sure to change spacing depending on the diam - should be furhter for smaller diam
 
 click_flag = -1
@@ -40,13 +82,11 @@ big_lst = []
 
 class Lst{
     // constructor(b, s) {
-    constructor(ball_color) {
-        // console.log('construc')
-
+    constructor(ball_color, ddiam) {
         this.balls = []
         this.synths = []
         this.bounce = 0.001
-        this.speed = 0.01
+        this.speed = 0.1
         this.notes = [
             'C#3', 'D#3', 'E3', 'F#3', 'G#3', 'A3', 'B3',
             'C#4', 'D#4', 'E4', 'F#4', 'G#4', 'A4', 'B4',
@@ -54,17 +94,9 @@ class Lst{
         ]
         this.start_cnt = 0
         this.color = ball_color
+        this.ddiam = ddiam
         //TODO   
     }
-
-    // calcNote (rootFreq, num) {
-    //     // const majorScale = [2, 2, 1, 2, 2, 2, 1]
-    //     const majorScale = [0, 2, 4, 5, 7, 9, 11, 12]
-    //     const tr2 = Math.pow(2, 1/12) // the twelth root of 2
-    //     const n = majorScale[num]
-    //     const freq = rootFreq * Math.pow(tr2, n)
-    //     return freq
-    // }
 
     createBall (i, cols, diam) {
         console.log('createball')
@@ -77,8 +109,6 @@ class Lst{
     }
 
     setup(cols, diam){
-        
-
         for (let i = 0; i < cols; i++) {
             const b = this.createBall(i, cols, diam)
             this.balls.push(b)
@@ -86,15 +116,9 @@ class Lst{
             const s = new Tone.Synth().toDestination()
             this.synths.push(s)
         }
-
-        // this.bounce = 0.0002
-        // this.speed = 0
     }
 
-    
-
-
-    draw(diam){
+    draw(ddiam){
         // console.log('drawing ')
         const range = height/4
         const offset = height/2 
@@ -102,11 +126,8 @@ class Lst{
 
         this.balls.forEach((b, i) => {
             const scaler = i * this.bounce + this.speed
-            b.y = Math.sin(this.start_cnt * scaler) * range + offset
-            if (b.y >= ground - 1) {
-                // fill(255, 12, 230)
-                // fill(25.11, 12.123, 230.2323)
-                // console.log('filling:', color)
+            b.y = Math.sin(this.start_cnt * scaler) * range + offset - ddiam/2
+            if (b.y + ddiam/2 >= ground - 1) {
                 fill(this.color[0], this.color[1], this.color[2])
                 const n = this.notes[i] 
                 // const n = this.calcNote(264, i)
@@ -115,22 +136,13 @@ class Lst{
             } else {
                 fill(134, 123, 220)
             }
-            circle(b.x, b.y, diam)
+            circle(b.x, b.y, ddiam)
         })
         this.start_cnt += 1
     }
 }
 
-// function getHSLColor(){ 
-//     return 
-// }
-
 function getColor(){
-    // const HSLToRGB = (h, s, l) => {
-    // hsl = "hsl(" +  + ',' 
-    //                 +  + '%,' 
-    //                 + (85 + 10 * Math.random()) + '%)'
-    
     h = 360 * Math.random()
     s = (25 + 70 * Math.random())
     l = (85 + 10 * Math.random())
@@ -142,10 +154,8 @@ function getColor(){
     const f = n =>
         l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
 
-    // var tmp = [Math.round(255 * f(0)), Math.round(255 * f(8)), Math.round(255 * f(4))]
     var tmp = [255 * f(0), 255 * f(8), 255 * f(4)]
     return tmp;
-    // };
 }
 
 
@@ -154,12 +164,7 @@ function setup () {
     createCanvas(innerWidth, innerHeight)
     // each time new button is pressed, make new ball lst!!!
 
-    // for (let i = 0; i < cols; i++) {
-    //     const s = new Tone.PolySynth()
-    //     // s.connect(reverb)
-    //     synths.push(s)
-    // }
-
+    // Start button
     var start_b = createButton('Start!');
     start_b.position(20, 20);
     start_b.mousePressed(() => {
@@ -167,131 +172,61 @@ function setup () {
         Tone.start()
     });
 
+    // Sliders
+    var slider1 = document.getElementById("bouncy");
+    var sliderValue1 = document.getElementById("sliderValue1");
+    sliderValue1.innerHTML = slider1.value;
+    slider1.oninput = function() {
+        sliderValue1.innerHTML = this.value;
+    };
+    var slider2 = document.getElementById("speedy");
+    var sliderValue2 = document.getElementById("sliderValue2");
+    sliderValue2.innerHTML = slider2.value;
+    slider2.oninput = function() {
+        sliderValue2.innerHTML = this.value;
+    };
 
 
+    // var slider = document.getElementById("myRange");
+    // var output = document.getElementById("demo");
+    // output.innerHTML = slider.value; // Display the default slider value
+
+    // // Update the current slider value (each time you drag the slider handle)
+    // slider.oninput = function() {
+    //     output.innerHTML = this.value;
+    // }
+
+    // New list button
     var ball_lst_b = createButton('new ball lst!');
     ball_lst_b.position(20, 60);
     ball_lst_b.mousePressed(() => {
-        // draw_lst_ctr += 1
-        console.log('button')
+        // console.log('button')
 
         var ball_color = this.getColor()
         console.log(ball_color)
 
-        let new_lst = new Lst(ball_color)
+        // Radius input
+        var input = document.getElementById("radius");
+        var ddiam = input.value / 2;
+
+        let new_lst = new Lst(ball_color, ddiam)
         new_lst.setup(cols, diam)
         big_lst.push(new_lst)
     });
-
     // background(180)
 
 }
 
-// function make_lst(){
-//     console.log('in make_lst')
-
-//     balls = []
-//     syn
-
-//     cur_lst_ctr += 1
-//     for (let i = 0; i < cols; i++) {
-//         balls.push(createBall(i))
-//     }
-//     return balls
-
-//     // //controls
-//     // bouncy = 0.0002
-//     // fast = 0.02
-
-//     // //make it happen
-//     // draw_balls(balls, bouncy, fast)
-// }
-
-// function createBall (i) {
-//     const offsetX = innerWidth / 2 - ((cols * diam) / 2)
-//     const x = i * diam + offsetX
-//     const y = innerHeight / 2
-//     const r = diam / 2
-//     return { x, y, r }
-// }
-
-
 
 function draw () {
     const ground = height*0.75
-    // do_draw()
-
     if (click_flag == 1){
         background(180)
         line(width * 0.1, ground, width * 0.9, ground)
-
-    
         big_lst.forEach(cur_lst => {
             cur_lst.draw(diam)
         })
-
     }
-
-    
-
-
-    // if (click_flag == 1) {
-    //     // do_draw()
-    //     line(width * 0.1, ground, width * 0.9, ground)
-
-    //     if (draw_lst_ctr > cur_lst_ctr) {
-    //         // cur_lst_ctr += 1
-    //         do_draw()
-            
-    //     }
-    // }
-    // else {
-    //     background(180) //how to STOP the animation
-    //     //draw in samw spot - dont oberlay bg
-    // }
 }
-
-// function do_draw(){
-//     console.log('GOT to do_draw')
-
-//     const ground = height*0.75
-
-//     // draw_balls(balls, 0.0002, 0.02)
-//     // draw_balls(balls2, 0.002, 0.1)
-//     // draw_balls(balls3, 0.002, 0.1)
-
-//     balls = []
-//     cur_lst_ctr += 1
-//     for (let i = 0; i < cols; i++) {
-//         balls.push(createBall(i))
-//     }
-
-//     draw_balls(balls, 0.0002, 0.02)
-// }
-
-// function draw_balls(lst, bouncy, fast){
-//     console.log('in draw_balls')
-
-//     const range = height/4
-//     const offset = height/2 
-//     const ground = height*0.75
-
-//     lst.forEach((b, i) => {
-//         const scaler = i * bouncy + fast
-//         b.y = Math.sin(frameCount * scaler) * range + offset
-//         if (b.y >= ground - 1) {
-//             fill(255, 12, 230)
-//             const n = notes[i]
-//             const s = synths[i]
-//             s.triggerAttackRelease(n, '8n', Tone.now(), 0.25)
-//         } else {
-//             fill(134, 123, 220)
-//         }
-//         circle(b.x, b.y, diam)
-//     })
-// }
-
-
-
 
 </script>

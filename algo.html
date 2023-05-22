@@ -12,43 +12,44 @@
 <input type="range" min="0.0001" max="0.1" value="0.1" class="slider" id="speedy">
 <p>Value: <span id="sliderValue2"></span></p>
 
-<input type="number" id="radius" placeholder="Enter desired radius">
-<button onclick="showInputValue()">Submit</button>
+<!-- <input type="number" id="radius" placeholder="Enter desired radius">
+<button onclick="showInputValue()">Submit</button> -->
 
 
 <style>
 
 .slider {
-  appearance: none;
-  width: 30%;
-  height: 10px;
-  border-radius: 5px;
-  background: #ccc;
-  outline: none;
-  opacity: 0.7;
-  -webkit-transition: .2s;
-  transition: opacity .2s;
+    appearance: none;
+    position: relative;
+    width: 30%;
+    height: 10px;
+    border-radius: 5px;
+    background: #ccc;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
 }
 
 .slider::-webkit-slider-thumb {
-  appearance: none;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: #4CAF50;
-  cursor: pointer;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #4CAF50;
+    cursor: pointer;
 }
 
-input[type="number"] {
-  width: 200px;
-  padding: 10px;
-  font-size: 16px;
+/* input[type="number"] {
+    width: 200px;
+    padding: 10px;
+    font-size: 16px;
 }
 
 button {
-  padding: 10px 20px;
-  font-size: 16px;
-}
+    padding: 10px 20px;
+    font-size: 16px;
+} */
 
 
 </style>
@@ -63,6 +64,7 @@ cols = 21
 diam = 20
 
 draw_diam = 10
+
 // make sure to change spacing depending on the diam - should be furhter for smaller diam
 
 click_flag = -1
@@ -71,13 +73,6 @@ cur_lst_ctr = 0
 draw_lst_ctr = 0
 
 big_lst = []
-
-// const notes = [
-//     'C#3', 'D#3', 'E3', 'F#3', 'G#3', 'A3', 'B3',
-//     'C#4', 'D#4', 'E4', 'F#4', 'G#4', 'A4', 'B4',
-//     'C#5', 'D#5', 'E5', 'F#5', 'G#5', 'A5', 'B5',
-// ]
-
 
 
 class Lst{
@@ -119,7 +114,6 @@ class Lst{
     }
 
     draw(ddiam){
-        // console.log('drawing ')
         const range = height/4
         const offset = height/2 
         const ground = height*0.75
@@ -130,7 +124,6 @@ class Lst{
             if (b.y + ddiam/2 >= ground - 1) {
                 fill(this.color[0], this.color[1], this.color[2])
                 const n = this.notes[i] 
-                // const n = this.calcNote(264, i)
                 const s = this.synths[i]
                 s.triggerAttackRelease(n, '8n', Tone.now())
             } else {
@@ -166,7 +159,7 @@ function setup () {
 
     // Start button
     var start_b = createButton('Start!');
-    start_b.position(20, 20);
+    start_b.position(20, 150);
     start_b.mousePressed(() => {
         click_flag = click_flag * -1
         Tone.start()
@@ -186,31 +179,32 @@ function setup () {
         sliderValue2.innerHTML = this.value;
     };
 
+    input = createInput();
+    input.position(100, 35);
 
-    // var slider = document.getElementById("myRange");
-    // var output = document.getElementById("demo");
-    // output.innerHTML = slider.value; // Display the default slider value
+    in_button = createButton('Submit');
+    in_button.position(input.x + input.width, 65);
+    in_button.mousePressed(() => {
+        var inp = input.value();
+        ddiam = inp * 2;
+    });
 
-    // // Update the current slider value (each time you drag the slider handle)
-    // slider.oninput = function() {
-    //     output.innerHTML = this.value;
-    // }
+    // greeting = createElement('h2', 'what is your name?');
+    // greeting.position(20, 5);
+
+
+    
 
     // New list button
     var ball_lst_b = createButton('new ball lst!');
-    ball_lst_b.position(20, 60);
+    ball_lst_b.position(20, 200);
     ball_lst_b.mousePressed(() => {
-        // console.log('button')
-
         var ball_color = this.getColor()
         console.log(ball_color)
 
-        // Radius input
-        var input = document.getElementById("radius");
-        var ddiam = input.value / 2;
-
         let new_lst = new Lst(ball_color, ddiam)
         new_lst.setup(cols, diam)
+
         big_lst.push(new_lst)
     });
     // background(180)

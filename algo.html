@@ -120,7 +120,9 @@ class Lst{
             } else {
                 fill(this.color)
             }
+            noStroke()
             circle(b.x, b.y, this.ddiam)
+            stroke(250)
         })
         this.start_cnt += 1
     }
@@ -161,12 +163,32 @@ function setup () {
     synth_sel.selected('Synth');
     
     // Sliders
+
+    // slider = createSlider(0, 255, 100);
+    
+    // label = createSpan('Red');
+    // label.parent(group);
+    
+    speedy_label = createDiv('Speedy    ');
+    bouncy_label = createDiv('Bouncy   ');
+    speedy_label.style('font-size', '10px');
+    speedy_label.style('color', color(150));
+    speedy_label.position(20, 100);  
+
+    bouncy_label.style('font-size', '10px');
+    bouncy_label.style('color', color(150));
+    bouncy_label.position(20, 130);  
+
+
     speedy_slider = createSlider(1, 8);
     bouncy_slider = createSlider(1, 8);
-    speedy_slider.position(20, 100);
-    bouncy_slider.position(20, 120);
-    speedy_slider.style('width', '30%');
-    bouncy_slider.style('width', '30%');
+    speedy_slider.parent(speedy_label);
+    bouncy_slider.parent(bouncy_label);
+
+    // speedy_slider.position(20, 100);
+    // bouncy_slider.position(20, 120);
+    speedy_slider.style('width', '90%');
+    bouncy_slider.style('width', '90%');
 
     // New list button
     var ball_lst_b = createButton('new ball lst!');
@@ -193,7 +215,10 @@ function draw () {
     const ground = height*0.75
     if (click_flag == 1){
         background(0)
+        
         line(width * 0.1, ground, width * 0.9, ground)
+        // strokeWeight(4);
+        stroke(250)
         big_lst.forEach(cur_lst => {
             cur_lst.draw(diam)
         })

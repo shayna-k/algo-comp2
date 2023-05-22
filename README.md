@@ -15,3 +15,6 @@ the sound.
   (speed range: 0.001-0.008, default speed: 0.005, bounce range: 0.001-0.01, 
   default bounce: 0.005) <br>
   ♪ Press [new ball lst!] to add a new sound with your chosen controls! <br>
+
+
+I wanted to make a kind of instrument that can be controlled, but also has an algorithmic aspect in the composition process. This is an instrument as one can control to a degree what kind of sound they want, and once controls are selected, the algorithm continues the process. 

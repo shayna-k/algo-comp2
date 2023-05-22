@@ -63,8 +63,6 @@ synths = []
 cols = 21
 diam = 20
 
-draw_diam = 10
-
 // make sure to change spacing depending on the diam - should be furhter for smaller diam
 
 click_flag = -1
@@ -74,21 +72,23 @@ draw_lst_ctr = 0
 
 big_lst = []
 
+const bright_color_lst = ['#FF0000', '#FFC000', '#FFFC00', '#00FF00', '#00FFFF', '#0080FF', '#9933FF', '#FF00FF', '#FF007F']
+var b_col_idx = 0
 
 class Lst{
     // constructor(b, s) {
     constructor(ball_color, ddiam) {
         this.balls = []
         this.synths = []
-        this.bounce = 0.001
-        this.speed = 0.1
+        this.bounce = 0.0001 //0.001
+        this.speed = 0.01 //0.1
         this.notes = [
             'C#3', 'D#3', 'E3', 'F#3', 'G#3', 'A3', 'B3',
             'C#4', 'D#4', 'E4', 'F#4', 'G#4', 'A4', 'B4',
             'C#5', 'D#5', 'E5', 'F#5', 'G#5', 'A5', 'B5',
         ]
         this.start_cnt = 0
-        this.color = ball_color
+        this.color = color(ball_color)
         this.ddiam = ddiam
         //TODO   
     }
@@ -113,50 +113,54 @@ class Lst{
         }
     }
 
-    draw(ddiam){
+    draw(){
         const range = height/4
         const offset = height/2 
         const ground = height*0.75
 
         this.balls.forEach((b, i) => {
             const scaler = i * this.bounce + this.speed
-            b.y = Math.sin(this.start_cnt * scaler) * range + offset - ddiam/2
-            if (b.y + ddiam/2 >= ground - 1) {
-                fill(this.color[0], this.color[1], this.color[2])
+            b.y = Math.sin(this.start_cnt * scaler) * range + offset - this.ddiam/2
+            if (b.y + this.ddiam/2 >= ground - 1) {
+                // fill(this.color[0], this.color[1], this.color[2])
+                // fill(color())
+
+                fill(this.color)
                 const n = this.notes[i] 
                 const s = this.synths[i]
                 s.triggerAttackRelease(n, '8n', Tone.now())
             } else {
                 fill(134, 123, 220)
             }
-            circle(b.x, b.y, ddiam)
+            // console.log('lst draw this.ddiam: ' + this.ddiam)
+            circle(b.x, b.y, this.ddiam)
         })
         this.start_cnt += 1
     }
 }
 
-function getColor(){
-    h = 360 * Math.random()
-    s = (25 + 70 * Math.random())
-    l = (85 + 10 * Math.random())
+// function getColor(){
+//     h = 360 * Math.random()
+//     s = (25 + 70 * Math.random())
+//     l = (85 + 10 * Math.random())
 
-    s /= 100;
-    l /= 100;
-    const k = n => (n + h / 30) % 12;
-    const a = s * Math.min(l, 1 - l);
-    const f = n =>
-        l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+//     s /= 100;
+//     l /= 100;
+//     const k = n => (n + h / 30) % 12;
+//     const a = s * Math.min(l, 1 - l);
+//     const f = n =>
+//         l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
 
-    var tmp = [255 * f(0), 255 * f(8), 255 * f(4)]
-    return tmp;
-}
+//     var tmp = [255 * f(0), 255 * f(8), 255 * f(4)]
+//     return tmp;
+// }
 
 
 
 function setup () {
     createCanvas(innerWidth, innerHeight)
     // each time new button is pressed, make new ball lst!!!
-
+    
     // Start button
     var start_b = createButton('Start!');
     start_b.position(20, 150);
@@ -181,26 +185,29 @@ function setup () {
 
     input = createInput();
     input.position(100, 35);
+    input.attribute('placeholder', 'Enter desired radius in px (default=10)');
+
+    var ddiam = 10;
 
     in_button = createButton('Submit');
     in_button.position(input.x + input.width, 65);
     in_button.mousePressed(() => {
+        // console.log('init ddiam: ' + ddiam)
         var inp = input.value();
         ddiam = inp * 2;
+        // console.log('cur ddiam: ' + ddiam)
     });
-
-    // greeting = createElement('h2', 'what is your name?');
-    // greeting.position(20, 5);
-
-
     
 
     // New list button
     var ball_lst_b = createButton('new ball lst!');
     ball_lst_b.position(20, 200);
     ball_lst_b.mousePressed(() => {
-        var ball_color = this.getColor()
-        console.log(ball_color)
+
+        // var ball_color = this.getColor()
+        var ball_color = bright_color_lst[b_col_idx%9]
+
+        b_col_idx++
 
         let new_lst = new Lst(ball_color, ddiam)
         new_lst.setup(cols, diam)

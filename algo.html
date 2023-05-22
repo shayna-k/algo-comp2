@@ -107,12 +107,33 @@ class Lst{
         return { x, y, r }
     }
 
-    setup(cols, diam){
+    get_synth(synth_choice){
+        switch(synth_choice){
+            case 'AMSynth':
+                return new Tone.AMSynth().toDestination()
+                break;
+            case 'FMSynth':
+                return new Tone.FMSynth().toDestination()
+                break;
+            case 'MonoSynth':
+                return new Tone.MonoSynth().toDestination()
+                break;
+            default:
+                return new Tone.Synth().toDestination()
+        }
+    }
+
+    setup(cols, diam, synth_choice){
         for (let i = 0; i < cols; i++) {
             const b = this.createBall(i, cols, diam)
             this.balls.push(b)
+            var s = this.get_synth(synth_choice)
 
-            const s = new Tone.Synth().toDestination()
+            // const s = new Tone.Synth().toDestination()
+            // const s = new Tone.AMSynth().toDestination()
+            // const s = new Tone.FMSynth().toDestination()
+            // const s = new Tone.MonoSynth().toDestination()
+
             this.synths.push(s)
         }
     }
@@ -145,32 +166,6 @@ class Lst{
     }
 }
 
-// function getColor(){
-//     h = 360 * Math.random()
-//     s = (25 + 70 * Math.random())
-//     l = (85 + 10 * Math.random())
-
-//     s /= 100;
-//     l /= 100;
-//     const k = n => (n + h / 30) % 12;
-//     const a = s * Math.min(l, 1 - l);
-//     const f = n =>
-//         l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
-
-//     var tmp = [255 * f(0), 255 * f(8), 255 * f(4)]
-//     return tmp;
-// }
-
-
-
-// function scale_slider(flag){
-//     // 0=speed, 1=bounce
-//     if (flag == 1) {
-
-//     }
-// }
-
-
 
 function setup () {
     createCanvas(innerWidth, innerHeight)
@@ -184,51 +179,34 @@ function setup () {
         Tone.start()
     });
 
-    // Sliders
-    // var slider1 = document.getElementById("bouncy");
-    // var sliderValue1 = document.getElementById("sliderValue1");
-    // sliderValue1.innerHTML = slider1.value;
-    // slider1.oninput = function() {
-    //     sliderValue1.innerHTML = this.value;
-    // };
-    // var slider2 = document.getElementById("speedy");
-    // var sliderValue2 = document.getElementById("sliderValue2");
-    // sliderValue2.innerHTML = slider2.value;
-    // slider2.oninput = function() {
-    //     sliderValue2.innerHTML = this.value;
-    // };
-
     input = createInput();
     input.position(100, 35);
     input.attribute('placeholder', 'Enter desired radius in px (default=10)');
 
     var ddiam = 10;
 
+    var synth_sel = createSelect();
+    synth_sel.position(20, 180);
+    synth_sel.option('Synth');
+    synth_sel.option('AMSynth');
+    synth_sel.option('FMSynth');
+    synth_sel.option('MonoSynth');
+    synth_sel.selected('Synth');
+    // synth_sel.changed(mySelectEvent);
+
     in_button = createButton('Submit');
-    in_button.position(input.x + input.width, 65);
+    in_button.position(input.x + input.width, 35);
     in_button.mousePressed(() => {
-        // console.log('init ddiam: ' + ddiam)
         var inp = input.value();
         ddiam = inp * 2;
-        // console.log('cur ddiam: ' + ddiam)
     });
 
-    // speedy_slider = createSlider(0.0001, 0.1, 0.1);
-    // speedy_slider = createSlider(0.0001, 0.1);
-    speedy_slider = createSlider(0.001, 1);
-    bouncy_slider = createSlider(0.0001, 1);
-    // bouncy_slider = createSlider(0.0001, 0.01);
-    // bouncy_slider = createSlider(0.0001, 0.01, 0.001);
-
+    speedy_slider = createSlider(1, 10);
+    bouncy_slider = createSlider(1, 10);
     speedy_slider.position(20, 100);
     bouncy_slider.position(20, 120);
     speedy_slider.style('width', '30%');
     bouncy_slider.style('width', '30%');
-
-    // trial_slider = createSlider(1, 10);
-    // trial_slider.position(20, 150);
-    // trial_slider.style('width', '30%');
-
 
     // New list button
     var ball_lst_b = createButton('new ball lst!');
@@ -240,13 +218,14 @@ function setup () {
 
         b_col_idx++
 
-        var speedy = speedy_slider.value()
-        var bouncy = bouncy_slider.value()
+        var speedy = speedy_slider.value() /1000
+        var bouncy = bouncy_slider.value() /1000
         console.log('sending s b: ' + speedy, bouncy)
 
+        var synth_choice = synth_sel.value()
 
         let new_lst = new Lst(ball_color, ddiam, speedy, bouncy)
-        new_lst.setup(cols, diam)
+        new_lst.setup(cols, diam, synth_choice)
 
         big_lst.push(new_lst)
     });

@@ -5,7 +5,8 @@
 <h1> Algorithmic Composer </h1>
 
 <body>
-    <div class="footer">Shayna Kaushal for Online Algorithmic Music | Spring 2023 | UChicago</div>
+    <div class="footer">Shayna Kaushal for Online Algorithmic Music 
+        | UChicago | Spring 2023</div>
   </body>
 
 <style>
@@ -69,6 +70,8 @@ var b_col_idx = 0
 var speedy_slider
 var bouncy_slider
 
+
+
 class Lst{
     constructor(ball_color, low_ball_color, ddiam, speedy, bouncy) {
         this.balls = []
@@ -86,6 +89,7 @@ class Lst{
         this.ddiam = ddiam
     }
 
+
     createBall (i, cols, diam) {
         const offsetX = innerWidth / 2 - ((cols * diam) / 2)
         const x = i * diam + offsetX
@@ -93,6 +97,7 @@ class Lst{
         const r = diam / 2
         return { x, y, r }
     }
+
 
     get_synth(synth_choice){
         switch(synth_choice){
@@ -110,6 +115,7 @@ class Lst{
         }
     }
 
+
     setup(cols, diam, synth_choice){
         for (let i = 0; i < cols; i++) {
             const b = this.createBall(i, cols, diam)
@@ -118,6 +124,7 @@ class Lst{
             this.synths.push(s)
         }
     }
+
 
     draw(){
         const range = height/4
@@ -142,6 +149,7 @@ class Lst{
         this.start_cnt += 1
     }
 }
+
 
 
 function setup () {
@@ -234,7 +242,6 @@ function setup () {
         }
 
         big_lst[cur_i] = new_lst
-        // big_lst.push(cur_len: new_lst)
 
         var new_button = createButton('List ' + (cur_i+1))
         var cur_y = (new_button_y + cur_i*20)
@@ -256,7 +263,6 @@ function setup () {
                 console.log('if big:', big_lst)
             }
             else{
-                // big_lst.splice(cur_i-1, 1)
                 delete big_lst[cur_i]
                 remove_lst.push(cur_i)
                 remove_lst.sort()
@@ -269,9 +275,9 @@ function setup () {
 
             new_button.remove()
         })
-        
     });
 }
+
 
 
 function draw () {
@@ -281,13 +287,11 @@ function draw () {
         
         line(width * 0.1, ground, width * 0.9, ground)
         stroke(250)
+
         var tmp_vals = Object.entries(big_lst)
         for (const [key, value] of tmp_vals) {
             value.draw(diam)
         }
-        // tmp_vals[1].forEach(cur_lst => {
-        //     cur_lst.draw(diam)
-        // })
     }
 }
 

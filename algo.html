@@ -2,6 +2,66 @@
 
 <title> Algo </title>
 
+<h1> Algorithmic Composer </h1>
+<h2> 
+    This composer lets you add multiple streams of notes, which can be 
+    produced by different instruments, provided by the Tone.js library. 
+    This is done by creating a stream on balls that bounce off a base. 
+    There are controls for the instrument, the size of the balls in the 
+    visualization, and the speed and bounce of the balls, that affect 
+    the sound. <br>
+    Get creative!
+</h2>
+<p>
+  <b>Instructions:</b> <br>
+  ♪ Choose a desired radius for each shape in px (range: 1-20) (default: 10) <br> 
+  ♪ Select an instrument for each new sound (default: Synth) <br>
+  ♪ Change controls for the speed and bounce of the shapes (default speed: , default bounce: ) <br>
+  ♪ Press [new ball lst!] to add a new sound with your chosen controls! <br>
+</p>
+
+<body>
+    <div class="footer">Shayna Kaushal for Online Algorithmic Music | Spring 2023 | UChicago</div>
+  </body>
+
+<style>
+    h1 {
+      text-align: center;
+      background-color: rgb(255, 208, 249);
+      font-family: Arial, sans-serif;
+      font-size: 18pt;
+    }
+  
+    h2 {
+      text-align: center;
+      background-color: rgb(188, 249, 237);
+      font-family: Arial, sans-serif;
+      font-size: 10pt;
+    }
+
+    p {
+      text-align: left;
+      background-color: rgb(247, 249, 188);
+      font-family: Arial, sans-serif;
+      font-size: 10pt;
+    }
+  
+    body { 
+        background-color: black; 
+        text-align: left;
+        /* background-color: rgb(136, 187, 213); */
+    }
+  
+    .footer{ 
+      position: fixed;     
+      text-align: center;    
+      bottom: 0px; 
+      width: 100%;
+      background-color: rgb(61, 60, 60);
+      font-family: Arial, sans-serif;
+    }  
+  </style>
+
 <script src="https://cdn.jsdelivr.net/npm/p5@1.6.0/lib/p5.js"></script>
 <script src="https://tonejs.github.io/build/Tone.js"></script>
 
@@ -131,68 +191,70 @@ class Lst{
 
 function setup () {
     createCanvas(innerWidth, innerHeight)
-    // each time new button is pressed, make new ball lst!!!
+
+    // Position values
+    const all_x = 20
+    const start_y = 50
+    const in_y = 150
+    const sel_y = 180
+    const slabel_y = 100
+    const blabel_y = 130
+    const balllst_y = 200
+
     
     // Start button
     var start_b = createButton('Start!');
-    start_b.position(20, 150);
+    start_b.position(all_x, start_y);
     start_b.mousePressed(() => {
         click_flag = click_flag * -1
         Tone.start()
     });
 
+
     // Radius input
     input = createInput();
-    input.position(100, 35);
-    input.attribute('placeholder', 'Enter desired radius in px (default=10)');
+    input.position(all_x, in_y);
+    input.attribute('placeholder', 'Enter radius');
     var ddiam = 10;
     in_button = createButton('Submit');
-    in_button.position(input.x + input.width, 35);
+    in_button.position(input.x + input.width, in_y);
     in_button.mousePressed(() => {
         var inp = input.value();
         ddiam = inp * 2;
     });
 
+
     // Synth selector
     var synth_sel = createSelect();
-    synth_sel.position(20, 180);
+    synth_sel.position(all_x, sel_y);
     synth_sel.option('Synth');
     synth_sel.option('AMSynth');
     synth_sel.option('FMSynth');
     synth_sel.option('MonoSynth');
     synth_sel.selected('Synth');
     
-    // Sliders
 
-    // slider = createSlider(0, 255, 100);
-    
-    // label = createSpan('Red');
-    // label.parent(group);
-    
+    // Sliders
     speedy_label = createDiv('Speedy    ');
-    bouncy_label = createDiv('Bouncy   ');
     speedy_label.style('font-size', '10px');
     speedy_label.style('color', color(150));
-    speedy_label.position(20, 100);  
-
+    speedy_label.position(all_x, slabel_y);  
+    speedy_slider = createSlider(1, 8);
+    speedy_slider.parent(speedy_label);
+    speedy_slider.style('width', '90%');
+    
+    bouncy_label = createDiv('Bouncy   ');
     bouncy_label.style('font-size', '10px');
     bouncy_label.style('color', color(150));
-    bouncy_label.position(20, 130);  
-
-
-    speedy_slider = createSlider(1, 8);
+    bouncy_label.position(all_x, blabel_y);  
     bouncy_slider = createSlider(1, 8);
-    speedy_slider.parent(speedy_label);
     bouncy_slider.parent(bouncy_label);
-
-    // speedy_slider.position(20, 100);
-    // bouncy_slider.position(20, 120);
-    speedy_slider.style('width', '90%');
     bouncy_slider.style('width', '90%');
+
 
     // New list button
     var ball_lst_b = createButton('new ball lst!');
-    ball_lst_b.position(20, 200);
+    ball_lst_b.position(all_x, balllst_y);
     ball_lst_b.mousePressed(() => {
         var ball_color = color(bright_color_lst[b_col_idx%8])
         var low_ball_color = color(bright_color_lst[b_col_idx%8])

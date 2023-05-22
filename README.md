@@ -16,7 +16,7 @@ the sound generated.
 
 There is also a way to remove streams of balls after creating them, for more flexibility in customization of the composition. A button for each list will be shown each time a new stream of balls is added. Clicking on a button will remove the corresponding stream of balls. 
 
-Click the [Start] button to pause or resume the composision.
+Click the [Start] button to pause or resume the composition.
 
 I wanted to make a kind of instrument that can be controlled, but also has an algorithmic aspect in the composition generation process. With this, one can control to a degree what kind of sound they want, and once controls are selected, the algorithm continues the process. The balls move in a sine wave, which is the bulk of the algorithmic aspect of this tool. The shape of the sine function is influenced by the 'speed' and 'bounce' controls. The control for the radius of the balls is for the visualization and does not influence sound. I include four options for the instrument from the Tone.js library, based on which ones I thought would work well together. The notes are fixed and each of the 21 balls in a stream plays a different note.
 

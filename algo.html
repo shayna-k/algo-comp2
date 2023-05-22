@@ -176,13 +176,28 @@ function setup () {
 
     
     // Start button
-    var start_b = createButton('Setup');
+    var clicks = 0
+    var start_b = createButton('Start');
     start_b.position(all_x, start_y);
     start_b.mousePressed(() => {
         click_flag = click_flag * -1
         Tone.start()
+        clicks += 1
+        if (clicks % 2 == 1){
+            this.text = 'Pause'
+        }
+        else{
+            this.text = 'Start'
+        }
     });
 
+    // var reset_b = createButton('Reset');
+    // reset_b.position(all_x+70, start_y);
+    // reset_b.mousePressed(() => {
+    //     // click_flag = click_flag * -1
+    //     big_lst = []
+        
+    // })
 
     // Radius input
     input = createInput();

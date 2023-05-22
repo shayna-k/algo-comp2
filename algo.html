@@ -20,7 +20,7 @@
 balls = []
 synths = []
 
-cols = 11
+cols = 21
 diam = 20
 
 // make sure to change spacing depending on the diam - should be furhter for smaller diam
@@ -32,7 +32,10 @@ draw_lst_ctr = 0
 
 big_lst = []
 
-// const bright_color_lst = ['#FF0000', '#FFC000', '#FFFC00', '#00FF00', '#00FFFF', '#0080FF', '#9933FF', '#FF00FF', '#FF007F']
+// const bright_color_lst = [
+//     '#FF0000', '#FFC000', '#FFFC00', '#00FF00', '#00FFFF', 
+//     '#0080FF', '#9933FF', '#FF00FF', '#FF007F'
+// ]
 const bright_color_lst = [
     'rgb(255,0,0)',
     'rgb(255,192,0)',
@@ -51,13 +54,12 @@ var speedy_slider
 var bouncy_slider
 
 class Lst{
-    // constructor(b, s) {
     constructor(ball_color, low_ball_color, ddiam, speedy, bouncy) {
         console.log(ball_color, low_ball_color)
         this.balls = []
         this.synths = []
-        this.bounce = bouncy //0.0001 //0.001
-        this.speed = speedy //0.01 //0.1
+        this.bounce = bouncy
+        this.speed = speedy
         this.notes = [
             'C#3', 'D#3', 'E3', 'F#3', 'G#3', 'A3', 'B3',
             'C#4', 'D#4', 'E4', 'F#4', 'G#4', 'A4', 'B4',
@@ -67,8 +69,6 @@ class Lst{
         this.color = color(ball_color)
         this.low_color = color(low_ball_color)
         this.ddiam = ddiam
-        // console.log(this.color.levels[3])
-
     }
 
     createBall (i, cols, diam) {
@@ -106,46 +106,18 @@ class Lst{
 
     draw(){
         const range = height/4
-        const offset = height/2 
+        const offset = height/2 - this.ddiam/2
         const ground = height*0.75
 
         this.balls.forEach((b, i) => {
             const scaler = i * this.bounce + this.speed
-            b.y = Math.sin(this.start_cnt * scaler) * range + offset - this.ddiam/2
+            b.y = Math.sin(this.start_cnt * scaler) * range + offset
             if (b.y + this.ddiam/2 >= ground - 1) {
-                // var tmp = this.color.levels
-                // tmp[3] -= 0.5
-                // var tmp_col = color(tmp)
-                // // color(tmp[0], tmp[1], tmp[2], tmp[3])
-                // console.log('old:' + this.color)
-                // fill(tmp_col)
-                // console.log('old:' + tmp_col)
-
-
-                // console.log(tmp_col)
-                // console.log(tmp)
-
-                // console.log('before: '+ this.color)
-
-                // var lower_col = color(Object.assign({}, this.color))
-                // var tmp_obj = {...this}
-
-                // var tmp_obj = Object.assign({}, this);
-                // var lower_col = tmp_obj.color
-                // lower_col.setAlpha(0)
-                // fill(lower_col)
-                
-                // console.log(tmp_obj)
-                // console.log('after: '+ this.color, tmp_obj.color)
-                
-                // fill(this.color)
-
                 fill(this.low_color)
                 const n = this.notes[i] 
                 const s = this.synths[i]
                 s.triggerAttackRelease(n, '8n', Tone.now())
             } else {
-                // console.log('else: ' + this.color)
                 fill(this.color)
             }
             circle(b.x, b.y, this.ddiam)
@@ -167,20 +139,11 @@ function setup () {
         Tone.start()
     });
 
+    // Radius input
     input = createInput();
     input.position(100, 35);
     input.attribute('placeholder', 'Enter desired radius in px (default=10)');
-
     var ddiam = 10;
-
-    var synth_sel = createSelect();
-    synth_sel.position(20, 180);
-    synth_sel.option('Synth');
-    synth_sel.option('AMSynth');
-    synth_sel.option('FMSynth');
-    synth_sel.option('MonoSynth');
-    synth_sel.selected('Synth');
-
     in_button = createButton('Submit');
     in_button.position(input.x + input.width, 35);
     in_button.mousePressed(() => {
@@ -188,6 +151,16 @@ function setup () {
         ddiam = inp * 2;
     });
 
+    // Synth selector
+    var synth_sel = createSelect();
+    synth_sel.position(20, 180);
+    synth_sel.option('Synth');
+    synth_sel.option('AMSynth');
+    synth_sel.option('FMSynth');
+    synth_sel.option('MonoSynth');
+    synth_sel.selected('Synth');
+    
+    // Sliders
     speedy_slider = createSlider(1, 8);
     bouncy_slider = createSlider(1, 8);
     speedy_slider.position(20, 100);
@@ -199,19 +172,13 @@ function setup () {
     var ball_lst_b = createButton('new ball lst!');
     ball_lst_b.position(20, 200);
     ball_lst_b.mousePressed(() => {
-
         var ball_color = color(bright_color_lst[b_col_idx%8])
         var low_ball_color = color(bright_color_lst[b_col_idx%8])
         low_ball_color.setAlpha(30)
-        console.log('made low col: '+low_ball_color)
-        console.log('made ball col: '+ball_color)
-
         b_col_idx++
 
         var speedy = speedy_slider.value() /1000
         var bouncy = bouncy_slider.value() /1000
-        console.log('sending s b: ' + speedy, bouncy)
-
         var synth_choice = synth_sel.value()
 
         let new_lst = new Lst(ball_color, low_ball_color, ddiam, speedy, bouncy)
@@ -232,5 +199,13 @@ function draw () {
         })
     }
 }
+
+/**
+ * TODO:
+ * - show ball lists - choose to delete
+ * - label and position option stuff
+ * - describe stuff
+ * - add getinfo for options?
+*/
 
 </script>

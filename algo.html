@@ -6,55 +6,6 @@
 <script src="https://tonejs.github.io/build/Tone.js"></script>
 
 
-<!-- <input type="range" min="0.0001" max="0.01" value="50" class="slider" id="bouncy">
-<p>Value: <span id="sliderValue1"></span></p>
-
-<input type="range" min="0.0001" max="0.1" value="0.1" class="slider" id="speedy">
-<p>Value: <span id="sliderValue2"></span></p> -->
-
-<!-- <input type="number" id="radius" placeholder="Enter desired radius">
-<button onclick="showInputValue()">Submit</button> -->
-
-
-<style>
-
-/* .slider {
-    appearance: none;
-    position: relative;
-    width: 30%;
-    height: 10px;
-    border-radius: 5px;
-    background: #ccc;
-    outline: none;
-    opacity: 0.7;
-    -webkit-transition: .2s;
-    transition: opacity .2s;
-}
-
-.slider::-webkit-slider-thumb {
-    appearance: none;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: #4CAF50;
-    cursor: pointer;
-} */
-
-/* input[type="number"] {
-    width: 200px;
-    padding: 10px;
-    font-size: 16px;
-}
-
-button {
-    padding: 10px 20px;
-    font-size: 16px;
-} */
-
-
-</style>
-
-
 <script>
 
 balls = []
@@ -94,12 +45,9 @@ class Lst{
         this.start_cnt = 0
         this.color = color(ball_color)
         this.ddiam = ddiam
-        //TODO   
     }
 
     createBall (i, cols, diam) {
-        // console.log('createball')
-
         const offsetX = innerWidth / 2 - ((cols * diam) / 2)
         const x = i * diam + offsetX
         const y = innerHeight / 2
@@ -128,12 +76,6 @@ class Lst{
             const b = this.createBall(i, cols, diam)
             this.balls.push(b)
             var s = this.get_synth(synth_choice)
-
-            // const s = new Tone.Synth().toDestination()
-            // const s = new Tone.AMSynth().toDestination()
-            // const s = new Tone.FMSynth().toDestination()
-            // const s = new Tone.MonoSynth().toDestination()
-
             this.synths.push(s)
         }
     }
@@ -147,19 +89,13 @@ class Lst{
             const scaler = i * this.bounce + this.speed
             b.y = Math.sin(this.start_cnt * scaler) * range + offset - this.ddiam/2
             if (b.y + this.ddiam/2 >= ground - 1) {
-                // fill(this.color[0], this.color[1], this.color[2])
-                // fill(color())
-                // fill()
                 fill('black')
-                
                 const n = this.notes[i] 
                 const s = this.synths[i]
                 s.triggerAttackRelease(n, '8n', Tone.now())
             } else {
                 fill(this.color)
-                // fill(134, 123, 220)
             }
-            // console.log('lst draw this.ddiam: ' + this.ddiam)
             circle(b.x, b.y, this.ddiam)
         })
         this.start_cnt += 1
@@ -192,7 +128,6 @@ function setup () {
     synth_sel.option('FMSynth');
     synth_sel.option('MonoSynth');
     synth_sel.selected('Synth');
-    // synth_sel.changed(mySelectEvent);
 
     in_button = createButton('Submit');
     in_button.position(input.x + input.width, 35);
@@ -213,7 +148,6 @@ function setup () {
     ball_lst_b.position(20, 200);
     ball_lst_b.mousePressed(() => {
 
-        // var ball_color = this.getColor()
         var ball_color = bright_color_lst[b_col_idx%9]
 
         b_col_idx++
@@ -229,8 +163,6 @@ function setup () {
 
         big_lst.push(new_lst)
     });
-    // background(180)
-
 }
 
 

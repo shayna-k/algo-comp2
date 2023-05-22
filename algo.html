@@ -4,17 +4,6 @@
 
 <h1> Algorithmic Composer </h1>
 
-<p>
-  <b>Instructions:</b> <br>
-  ♪ Choose a desired radius for each shape in px (range: 1-20) 
-  (default: 10) <br> 
-  ♪ Select an instrument for each new sound (default: Synth) <br>
-  ♪ Change controls for the speed and bounce of the shapes 
-  (speed range: 0.001-0.008, default speed: 0.005, bounce range: 0.001-0.01, 
-  default bounce: 0.005) <br>
-  ♪ Press [new ball lst!] to add a new sound with your chosen controls! <br>
-</p>
-
 <body>
     <div class="footer">Shayna Kaushal for Online Algorithmic Music | Spring 2023 | UChicago</div>
   </body>
@@ -27,7 +16,7 @@
       font-size: 18pt;
     }
   
-    h2 {
+    /* h2 {
       text-align: center;
       background-color: rgb(188, 249, 237);
       font-family: Arial, sans-serif;
@@ -39,7 +28,7 @@
       background-color: rgb(247, 249, 188);
       font-family: Arial, sans-serif;
       font-size: 10pt;
-    }
+    } */
   
     body { 
         background-color: black; 
@@ -174,19 +163,20 @@ function setup () {
 
     // Position values
     const all_x = 20
-    const start_y = 160
-    const in_y = 200
+    const start_y = 60
+    const in_y = 100
     const sel_x = 250
-    const sel_y = 200
+    const sel_y = 100
     const slabel_x = 360
-    const slabel_y = 190
+    const slabel_y = 90
     const blabel_x = 530
-    const blabel_y = 190
-    const balllst_y = 240
+    const blabel_y = 90
+    const balllst_y = 140
+    const new_button_y = 160
 
     
     // Start button
-    var start_b = createButton('Start!');
+    var start_b = createButton('Setup');
     start_b.position(all_x, start_y);
     start_b.mousePressed(() => {
         click_flag = click_flag * -1
@@ -237,7 +227,7 @@ function setup () {
 
     // New list button
     var remove_lst = []
-    var ball_lst_b = createButton('new ball lst!');
+    var ball_lst_b = createButton('Add!');
     ball_lst_b.position(all_x, balllst_y);
     ball_lst_b.mousePressed(() => {
         var ball_color = color(bright_color_lst[b_col_idx%8])
@@ -261,7 +251,7 @@ function setup () {
         }
         
         var new_button = createButton('List ' + cur_i)
-        var cur_y = (260 + cur_i*20)
+        var cur_y = (new_button_y + cur_i*20)
         new_button.position(all_x, cur_y);
 
         new_button.mousePressed(() => {
@@ -270,7 +260,6 @@ function setup () {
             remove_lst.push(cur_i)
             remove_lst.sort()
         })
-
     });
 }
 

@@ -16,20 +16,6 @@
       font-size: 18pt;
     }
   
-    /* h2 {
-      text-align: center;
-      background-color: rgb(188, 249, 237);
-      font-family: Arial, sans-serif;
-      font-size: 10pt;
-    }
-
-    p {
-      text-align: left;
-      background-color: rgb(247, 249, 188);
-      font-family: Arial, sans-serif;
-      font-size: 10pt;
-    } */
-  
     body { 
         background-color: black; 
         text-align: left;
@@ -176,28 +162,13 @@ function setup () {
 
     
     // Start button
-    var clicks = 0
     var start_b = createButton('Start');
     start_b.position(all_x, start_y);
     start_b.mousePressed(() => {
         click_flag = click_flag * -1
         Tone.start()
-        clicks += 1
-        if (clicks % 2 == 1){
-            this.text = 'Pause'
-        }
-        else{
-            this.text = 'Start'
-        }
     });
-
-    // var reset_b = createButton('Reset');
-    // reset_b.position(all_x+70, start_y);
-    // reset_b.mousePressed(() => {
-    //     // click_flag = click_flag * -1
-    //     big_lst = []
-        
-    // })
+    
 
     // Radius input
     input = createInput();
@@ -260,21 +231,25 @@ function setup () {
         big_lst.push(new_lst)
 
         var cur_i = big_lst.length
+        var new_button = createButton('List ' + cur_i)
+        var cur_y = (new_button_y + cur_i*20)
+        new_button.position(all_x, cur_y);
+        new_button.mousePressed(() => {
+            if (big_lst.length == 1){
+                big_lst = []
+                remove_lst = []
+            }
+            else{
+                big_lst.splice(cur_i-1, 1)
+                remove_lst.push(cur_i)
+                remove_lst.sort()
+            }
+            new_button.remove()
+        })
         if (remove_lst.length > 0){
             cur_i = remove_lst[0]
             remove_lst.splice(0, 1)
         }
-        
-        var new_button = createButton('List ' + cur_i)
-        var cur_y = (new_button_y + cur_i*20)
-        new_button.position(all_x, cur_y);
-
-        new_button.mousePressed(() => {
-            big_lst.splice(cur_i-1, 1)
-            new_button.remove()
-            remove_lst.push(cur_i)
-            remove_lst.sort()
-        })
     });
 }
 

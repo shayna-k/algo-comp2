@@ -6,9 +6,12 @@
 
 <p>
   <b>Instructions:</b> <br>
-  ♪ Choose a desired radius for each shape in px (range: 1-20) (default: 10) <br> 
+  ♪ Choose a desired radius for each shape in px (range: 1-20) 
+  (default: 10) <br> 
   ♪ Select an instrument for each new sound (default: Synth) <br>
-  ♪ Change controls for the speed and bounce of the shapes (default speed: , default bounce: ) <br>
+  ♪ Change controls for the speed and bounce of the shapes 
+  (speed range: 0.001-0.008, default speed: 0.005, bounce range: 0.001-0.01, 
+  default bounce: 0.005) <br>
   ♪ Press [new ball lst!] to add a new sound with your chosen controls! <br>
 </p>
 
@@ -79,7 +82,7 @@ big_lst = []
 
 const bright_color_lst = [
     'rgb(255,0,0)',
-    'rgb(255,192,0)',
+    'rgb(255,145,0)',
     'rgb(255,252,0)',
     'rgb(0,255,0)',
     'rgb(0,255,255)',
@@ -95,7 +98,7 @@ var bouncy_slider
 
 class Lst{
     constructor(ball_color, low_ball_color, ddiam, speedy, bouncy) {
-        console.log(ball_color, low_ball_color)
+        // console.log(ball_color, low_ball_color)
         this.balls = []
         this.synths = []
         this.bounce = bouncy
@@ -222,7 +225,7 @@ function setup () {
     speedy_label.style('font-size', '10px');
     speedy_label.style('color', color(150));
     speedy_label.position(slabel_x, slabel_y);  
-    speedy_slider = createSlider(1, 8, 5);
+    speedy_slider = createSlider(1, 100, 5);
     speedy_slider.parent(speedy_label);
     speedy_slider.style('width', '90%');
     
@@ -230,7 +233,7 @@ function setup () {
     bouncy_label.style('font-size', '10px');
     bouncy_label.style('color', color(150));
     bouncy_label.position(blabel_x, blabel_y);  
-    bouncy_slider = createSlider(1, 8, 5);
+    bouncy_slider = createSlider(1, 10, 5);
     bouncy_slider.parent(bouncy_label);
     bouncy_slider.style('width', '90%');
 
@@ -245,13 +248,27 @@ function setup () {
         b_col_idx++
 
         var speedy = speedy_slider.value() / 1000
-        var bouncy = bouncy_slider.value() / 1000
+        var bouncy = bouncy_slider.value() / 10000
         var synth_choice = synth_sel.value()
 
         let new_lst = new Lst(ball_color, low_ball_color, ddiam, speedy, bouncy)
+        console.log('sb: '+ speedy, bouncy)
         new_lst.setup(cols, diam, synth_choice)
 
         big_lst.push(new_lst)
+
+        var cur_i = big_lst.length
+        var new_button = createButton('List ' + cur_i)
+        var cur_y = (260 + cur_i*20)
+        new_button.position(all_x, cur_y);
+        // console.log(cur_i, cur_y)
+
+        new_button.mousePressed(() => {
+            big_lst.splice(cur_i-1, 1)
+            new_button.remove()
+            console.log(cur_i, cur_y)
+        })
+
     });
 }
 

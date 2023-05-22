@@ -239,6 +239,8 @@ function setup () {
 
 
     // New list button
+    var next_idx = 0
+    var remove_lst = []
     var ball_lst_b = createButton('new ball lst!');
     ball_lst_b.position(all_x, balllst_y);
     ball_lst_b.mousePressed(() => {
@@ -252,21 +254,34 @@ function setup () {
         var synth_choice = synth_sel.value()
 
         let new_lst = new Lst(ball_color, low_ball_color, ddiam, speedy, bouncy)
-        console.log('sb: '+ speedy, bouncy)
+        // console.log('sb: '+ speedy, bouncy)
         new_lst.setup(cols, diam, synth_choice)
 
         big_lst.push(new_lst)
 
         var cur_i = big_lst.length
+        // if (next_idx > 0){
+        //     cur_i = next_idx
+        //     next_idx = big_lst.length+1
+        // }
+        if (remove_lst.length > 0){
+            cur_i = remove_lst[0]
+            remove_lst.splice(0, 1)
+        }
+        // console.log('big len:', big_lst.length)
+        
         var new_button = createButton('List ' + cur_i)
         var cur_y = (260 + cur_i*20)
         new_button.position(all_x, cur_y);
-        // console.log(cur_i, cur_y)
+        // console.log('out:',cur_i, cur_y)
 
         new_button.mousePressed(() => {
             big_lst.splice(cur_i-1, 1)
             new_button.remove()
-            console.log(cur_i, cur_y)
+            remove_lst.push(cur_i)
+            remove_lst.sort()
+            // next_idx = cur_i
+            // console.log('in:',cur_i, cur_y)
         })
 
     });

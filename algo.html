@@ -6,11 +6,11 @@
 <script src="https://tonejs.github.io/build/Tone.js"></script>
 
 
-<input type="range" min="0.0001" max="0.01" value="50" class="slider" id="bouncy">
+<!-- <input type="range" min="0.0001" max="0.01" value="50" class="slider" id="bouncy">
 <p>Value: <span id="sliderValue1"></span></p>
 
 <input type="range" min="0.0001" max="0.1" value="0.1" class="slider" id="speedy">
-<p>Value: <span id="sliderValue2"></span></p>
+<p>Value: <span id="sliderValue2"></span></p> -->
 
 <!-- <input type="number" id="radius" placeholder="Enter desired radius">
 <button onclick="showInputValue()">Submit</button> -->
@@ -18,7 +18,7 @@
 
 <style>
 
-.slider {
+/* .slider {
     appearance: none;
     position: relative;
     width: 30%;
@@ -38,7 +38,7 @@
     border-radius: 50%;
     background: #4CAF50;
     cursor: pointer;
-}
+} */
 
 /* input[type="number"] {
     width: 200px;
@@ -75,13 +75,17 @@ big_lst = []
 const bright_color_lst = ['#FF0000', '#FFC000', '#FFFC00', '#00FF00', '#00FFFF', '#0080FF', '#9933FF', '#FF00FF', '#FF007F']
 var b_col_idx = 0
 
+
+var speedy_slider
+var bouncy_slider
+
 class Lst{
     // constructor(b, s) {
-    constructor(ball_color, ddiam) {
+    constructor(ball_color, ddiam, speedy, bouncy) {
         this.balls = []
         this.synths = []
-        this.bounce = 0.0001 //0.001
-        this.speed = 0.01 //0.1
+        this.bounce = bouncy //0.0001 //0.001
+        this.speed = speedy //0.01 //0.1
         this.notes = [
             'C#3', 'D#3', 'E3', 'F#3', 'G#3', 'A3', 'B3',
             'C#4', 'D#4', 'E4', 'F#4', 'G#4', 'A4', 'B4',
@@ -94,7 +98,7 @@ class Lst{
     }
 
     createBall (i, cols, diam) {
-        console.log('createball')
+        // console.log('createball')
 
         const offsetX = innerWidth / 2 - ((cols * diam) / 2)
         const x = i * diam + offsetX
@@ -124,13 +128,15 @@ class Lst{
             if (b.y + this.ddiam/2 >= ground - 1) {
                 // fill(this.color[0], this.color[1], this.color[2])
                 // fill(color())
-
-                fill(this.color)
+                // fill()
+                fill('black')
+                
                 const n = this.notes[i] 
                 const s = this.synths[i]
                 s.triggerAttackRelease(n, '8n', Tone.now())
             } else {
-                fill(134, 123, 220)
+                fill(this.color)
+                // fill(134, 123, 220)
             }
             // console.log('lst draw this.ddiam: ' + this.ddiam)
             circle(b.x, b.y, this.ddiam)
@@ -157,6 +163,15 @@ class Lst{
 
 
 
+// function scale_slider(flag){
+//     // 0=speed, 1=bounce
+//     if (flag == 1) {
+
+//     }
+// }
+
+
+
 function setup () {
     createCanvas(innerWidth, innerHeight)
     // each time new button is pressed, make new ball lst!!!
@@ -170,18 +185,18 @@ function setup () {
     });
 
     // Sliders
-    var slider1 = document.getElementById("bouncy");
-    var sliderValue1 = document.getElementById("sliderValue1");
-    sliderValue1.innerHTML = slider1.value;
-    slider1.oninput = function() {
-        sliderValue1.innerHTML = this.value;
-    };
-    var slider2 = document.getElementById("speedy");
-    var sliderValue2 = document.getElementById("sliderValue2");
-    sliderValue2.innerHTML = slider2.value;
-    slider2.oninput = function() {
-        sliderValue2.innerHTML = this.value;
-    };
+    // var slider1 = document.getElementById("bouncy");
+    // var sliderValue1 = document.getElementById("sliderValue1");
+    // sliderValue1.innerHTML = slider1.value;
+    // slider1.oninput = function() {
+    //     sliderValue1.innerHTML = this.value;
+    // };
+    // var slider2 = document.getElementById("speedy");
+    // var sliderValue2 = document.getElementById("sliderValue2");
+    // sliderValue2.innerHTML = slider2.value;
+    // slider2.oninput = function() {
+    //     sliderValue2.innerHTML = this.value;
+    // };
 
     input = createInput();
     input.position(100, 35);
@@ -197,7 +212,23 @@ function setup () {
         ddiam = inp * 2;
         // console.log('cur ddiam: ' + ddiam)
     });
-    
+
+    // speedy_slider = createSlider(0.0001, 0.1, 0.1);
+    // speedy_slider = createSlider(0.0001, 0.1);
+    speedy_slider = createSlider(0.001, 1);
+    bouncy_slider = createSlider(0.0001, 1);
+    // bouncy_slider = createSlider(0.0001, 0.01);
+    // bouncy_slider = createSlider(0.0001, 0.01, 0.001);
+
+    speedy_slider.position(20, 100);
+    bouncy_slider.position(20, 120);
+    speedy_slider.style('width', '30%');
+    bouncy_slider.style('width', '30%');
+
+    // trial_slider = createSlider(1, 10);
+    // trial_slider.position(20, 150);
+    // trial_slider.style('width', '30%');
+
 
     // New list button
     var ball_lst_b = createButton('new ball lst!');
@@ -209,7 +240,12 @@ function setup () {
 
         b_col_idx++
 
-        let new_lst = new Lst(ball_color, ddiam)
+        var speedy = speedy_slider.value()
+        var bouncy = bouncy_slider.value()
+        console.log('sending s b: ' + speedy, bouncy)
+
+
+        let new_lst = new Lst(ball_color, ddiam, speedy, bouncy)
         new_lst.setup(cols, diam)
 
         big_lst.push(new_lst)

@@ -71,8 +71,6 @@ synths = []
 cols = 21
 diam = 20
 
-// make sure to change spacing depending on the diam - should be furhter for smaller diam
-
 click_flag = -1
 
 cur_lst_ctr = 0
@@ -98,7 +96,6 @@ var bouncy_slider
 
 class Lst{
     constructor(ball_color, low_ball_color, ddiam, speedy, bouncy) {
-        // console.log(ball_color, low_ball_color)
         this.balls = []
         this.synths = []
         this.bounce = bouncy
@@ -239,7 +236,6 @@ function setup () {
 
 
     // New list button
-    var next_idx = 0
     var remove_lst = []
     var ball_lst_b = createButton('new ball lst!');
     ball_lst_b.position(all_x, balllst_y);
@@ -254,34 +250,25 @@ function setup () {
         var synth_choice = synth_sel.value()
 
         let new_lst = new Lst(ball_color, low_ball_color, ddiam, speedy, bouncy)
-        // console.log('sb: '+ speedy, bouncy)
         new_lst.setup(cols, diam, synth_choice)
 
         big_lst.push(new_lst)
 
         var cur_i = big_lst.length
-        // if (next_idx > 0){
-        //     cur_i = next_idx
-        //     next_idx = big_lst.length+1
-        // }
         if (remove_lst.length > 0){
             cur_i = remove_lst[0]
             remove_lst.splice(0, 1)
         }
-        // console.log('big len:', big_lst.length)
         
         var new_button = createButton('List ' + cur_i)
         var cur_y = (260 + cur_i*20)
         new_button.position(all_x, cur_y);
-        // console.log('out:',cur_i, cur_y)
 
         new_button.mousePressed(() => {
             big_lst.splice(cur_i-1, 1)
             new_button.remove()
             remove_lst.push(cur_i)
             remove_lst.sort()
-            // next_idx = cur_i
-            // console.log('in:',cur_i, cur_y)
         })
 
     });
@@ -294,17 +281,11 @@ function draw () {
         background(0)
         
         line(width * 0.1, ground, width * 0.9, ground)
-        // strokeWeight(4);
         stroke(250)
         big_lst.forEach(cur_lst => {
             cur_lst.draw(diam)
         })
     }
 }
-
-/**
- * TODO:
- * - show ball lists - choose to delete
-*/
 
 </script>

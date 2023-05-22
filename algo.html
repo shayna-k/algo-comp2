@@ -5,13 +5,22 @@
 <script src="https://cdn.jsdelivr.net/npm/p5@1.6.0/lib/p5.js"></script>
 <script src="https://tonejs.github.io/build/Tone.js"></script>
 
+<style>
+    canvas {
+        display:block;
+    }
+
+    body {
+        margin:0;
+    }
+</style>
 
 <script>
 
 balls = []
 synths = []
 
-cols = 21
+cols = 11
 diam = 20
 
 // make sure to change spacing depending on the diam - should be furhter for smaller diam
@@ -23,7 +32,18 @@ draw_lst_ctr = 0
 
 big_lst = []
 
-const bright_color_lst = ['#FF0000', '#FFC000', '#FFFC00', '#00FF00', '#00FFFF', '#0080FF', '#9933FF', '#FF00FF', '#FF007F']
+// const bright_color_lst = ['#FF0000', '#FFC000', '#FFFC00', '#00FF00', '#00FFFF', '#0080FF', '#9933FF', '#FF00FF', '#FF007F']
+const bright_color_lst = [
+    'rgb(255,0,0)',
+    'rgb(255,192,0)',
+    'rgb(255,252,0)',
+    'rgb(0,255,0)',
+    'rgb(0,255,255)',
+    'rgb(0,128,255)',
+    'rgb(153,51,255)',
+    'rgb(255,0,255)'
+]
+
 var b_col_idx = 0
 
 
@@ -32,7 +52,8 @@ var bouncy_slider
 
 class Lst{
     // constructor(b, s) {
-    constructor(ball_color, ddiam, speedy, bouncy) {
+    constructor(ball_color, low_ball_color, ddiam, speedy, bouncy) {
+        console.log(ball_color, low_ball_color)
         this.balls = []
         this.synths = []
         this.bounce = bouncy //0.0001 //0.001
@@ -44,7 +65,10 @@ class Lst{
         ]
         this.start_cnt = 0
         this.color = color(ball_color)
+        this.low_color = color(low_ball_color)
         this.ddiam = ddiam
+        // console.log(this.color.levels[3])
+
     }
 
     createBall (i, cols, diam) {
@@ -89,11 +113,39 @@ class Lst{
             const scaler = i * this.bounce + this.speed
             b.y = Math.sin(this.start_cnt * scaler) * range + offset - this.ddiam/2
             if (b.y + this.ddiam/2 >= ground - 1) {
-                fill('black')
+                // var tmp = this.color.levels
+                // tmp[3] -= 0.5
+                // var tmp_col = color(tmp)
+                // // color(tmp[0], tmp[1], tmp[2], tmp[3])
+                // console.log('old:' + this.color)
+                // fill(tmp_col)
+                // console.log('old:' + tmp_col)
+
+
+                // console.log(tmp_col)
+                // console.log(tmp)
+
+                // console.log('before: '+ this.color)
+
+                // var lower_col = color(Object.assign({}, this.color))
+                // var tmp_obj = {...this}
+
+                // var tmp_obj = Object.assign({}, this);
+                // var lower_col = tmp_obj.color
+                // lower_col.setAlpha(0)
+                // fill(lower_col)
+                
+                // console.log(tmp_obj)
+                // console.log('after: '+ this.color, tmp_obj.color)
+                
+                // fill(this.color)
+
+                fill(this.low_color)
                 const n = this.notes[i] 
                 const s = this.synths[i]
                 s.triggerAttackRelease(n, '8n', Tone.now())
             } else {
+                // console.log('else: ' + this.color)
                 fill(this.color)
             }
             circle(b.x, b.y, this.ddiam)
@@ -136,8 +188,8 @@ function setup () {
         ddiam = inp * 2;
     });
 
-    speedy_slider = createSlider(1, 10);
-    bouncy_slider = createSlider(1, 10);
+    speedy_slider = createSlider(1, 8);
+    bouncy_slider = createSlider(1, 8);
     speedy_slider.position(20, 100);
     bouncy_slider.position(20, 120);
     speedy_slider.style('width', '30%');
@@ -148,7 +200,11 @@ function setup () {
     ball_lst_b.position(20, 200);
     ball_lst_b.mousePressed(() => {
 
-        var ball_color = bright_color_lst[b_col_idx%9]
+        var ball_color = color(bright_color_lst[b_col_idx%8])
+        var low_ball_color = color(bright_color_lst[b_col_idx%8])
+        low_ball_color.setAlpha(30)
+        console.log('made low col: '+low_ball_color)
+        console.log('made ball col: '+ball_color)
 
         b_col_idx++
 
@@ -158,7 +214,7 @@ function setup () {
 
         var synth_choice = synth_sel.value()
 
-        let new_lst = new Lst(ball_color, ddiam, speedy, bouncy)
+        let new_lst = new Lst(ball_color, low_ball_color, ddiam, speedy, bouncy)
         new_lst.setup(cols, diam, synth_choice)
 
         big_lst.push(new_lst)
@@ -169,7 +225,7 @@ function setup () {
 function draw () {
     const ground = height*0.75
     if (click_flag == 1){
-        background(180)
+        background(0)
         line(width * 0.1, ground, width * 0.9, ground)
         big_lst.forEach(cur_lst => {
             cur_lst.draw(diam)

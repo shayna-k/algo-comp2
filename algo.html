@@ -51,7 +51,7 @@ click_flag = -1
 cur_lst_ctr = 0
 draw_lst_ctr = 0
 
-big_lst = []
+big_lst = {}
 
 const bright_color_lst = [
     'rgb(255,0,0)',
@@ -228,28 +228,48 @@ function setup () {
         let new_lst = new Lst(ball_color, low_ball_color, ddiam, speedy, bouncy)
         new_lst.setup(cols, diam, synth_choice)
 
-        big_lst.push(new_lst)
+        var cur_i = 0
+        if (Object.keys(big_lst).length > 0){
+            cur_i = Object.keys(big_lst).length
+        }
 
-        var cur_i = big_lst.length
-        var new_button = createButton('List ' + cur_i)
+        big_lst[cur_i] = new_lst
+        // big_lst.push(cur_len: new_lst)
+
+        var new_button = createButton('List ' + (cur_i+1))
         var cur_y = (new_button_y + cur_i*20)
-        new_button.position(all_x, cur_y);
-        new_button.mousePressed(() => {
-            if (big_lst.length == 1){
-                big_lst = []
-                remove_lst = []
-            }
-            else{
-                big_lst.splice(cur_i-1, 1)
-                remove_lst.push(cur_i)
-                remove_lst.sort()
-            }
-            new_button.remove()
-        })
+
         if (remove_lst.length > 0){
             cur_i = remove_lst[0]
             remove_lst.splice(0, 1)
         }
+
+        console.log('out rem:', remove_lst)
+        console.log('out big:', big_lst)
+
+        new_button.position(all_x, cur_y);
+        new_button.mousePressed(() => {
+            if (big_lst.length == 1){
+                big_lst = {}
+                remove_lst = []
+                console.log('if rem:', remove_lst)
+                console.log('if big:', big_lst)
+            }
+            else{
+                // big_lst.splice(cur_i-1, 1)
+                delete big_lst[cur_i]
+                remove_lst.push(cur_i)
+                remove_lst.sort()
+                console.log('else rem:', remove_lst)
+                console.log('else big:', big_lst)
+                console.log('else curi:', cur_i)
+            }
+            console.log('rem:', remove_lst)
+            console.log('big:', big_lst)
+
+            new_button.remove()
+        })
+        
     });
 }
 
@@ -261,9 +281,13 @@ function draw () {
         
         line(width * 0.1, ground, width * 0.9, ground)
         stroke(250)
-        big_lst.forEach(cur_lst => {
-            cur_lst.draw(diam)
-        })
+        var tmp_vals = Object.entries(big_lst)
+        for (const [key, value] of tmp_vals) {
+            value.draw(diam)
+        }
+        // tmp_vals[1].forEach(cur_lst => {
+        //     cur_lst.draw(diam)
+        // })
     }
 }
 

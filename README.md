@@ -8,7 +8,7 @@ visualization, and the speed and bounce of the balls, that affect
 the sound generated.
 
 <b>Instructions:</b> <br>
-&ensp;&ensp;♪ Press the [Setup] button to activate the environment - you will see a base appear. The following three steps are optional but enable customization of the sound and of the visualization. <br> 
+&ensp;&ensp;♪ Press the [Start] button to activate the environment - you will see a base appear. The following three steps are optional but enable customization of the sound and of the visualization. <br> 
 &ensp;&ensp;♪ Choose a desired radius for each shape in px and click [Submit] (suggested range: 1-20) (default: 10) <br> 
 &ensp;&ensp;♪ Select an instrument (default: Synth) <br>
 &ensp;&ensp;♪ Set controls for the speed and bounce of the shapes (speed range: 0.001-0.008, default speed: 0.005, bounce range: 0.001 0.01,default bounce: 0.005) <br>
